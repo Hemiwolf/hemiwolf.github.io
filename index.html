@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>歡迎來到半半的小狼窩</title>
+    <style>
+        /* CSS 變數：定義 #4166F5 專屬藍色系 */
+        :root {
+            --bg-dark: #040812; /* 深邃夜空底色 */
+            --primary-blue: #4166F5; /* 指定主色 */
+            --light-blue: #8ba5ff; /* 亮藍色（用於文字與高光） */
+            --neon-blue: #4166F5; /* 霓虹發光色 */
+            --text-main: #f8fafc;
+            --text-muted: #cbd5e1;
+            --card-bg: rgba(255, 255, 255, 0.03); /* 深色毛玻璃 */
+        }
+
+        /* 基礎設定與重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'PingFang TC', 'Heiti TC', 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            /* 主色 #4166F5 的交織漸層背景 */
+            background-image: 
+                radial-gradient(circle at 10% 10%, rgba(65, 102, 245, 0.15) 0%, transparent 45%),
+                radial-gradient(circle at 90% 90%, rgba(139, 165, 255, 0.1) 0%, transparent 45%),
+                radial-gradient(circle at 50% 50%, #080f24 0%, var(--bg-dark) 70%);
+            color: var(--text-main);
+            min-height: 100vh;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            padding: 3rem 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem; 
+        }
+
+        /* 👑 標題樣式 */
+        .hero-title {
+            text-align: center;
+            animation: slideDownFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(-20px);
+            z-index: 10;
+        }
+
+        .hero-title h1 {
+            /* 針對較長中文標題微調字體大小，防破版 */
+            font-size: clamp(2.2rem, 6vw, 4.5rem); 
+            font-weight: 900; 
+            letter-spacing: -1px; 
+            line-height: 1.2;
+            margin-bottom: 0.5rem;
+            
+            /* #4166F5 藍色金屬流光文字 */
+            background: linear-gradient(135deg, #fff 0%, var(--light-blue) 45%, var(--primary-blue) 50%, #fff 55%, var(--light-blue) 100%);
+            background-size: 200% auto;
+            color: #fff; 
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: shineText 5s linear infinite;
+
+            text-shadow: 
+                0 0 10px rgba(65, 102, 245, 0.5),
+                0 0 20px rgba(65, 102, 245, 0.3),
+                0 0 40px rgba(65, 102, 245, 0.1);
+        }
+
+        .hero-title p {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+            color: var(--light-blue);
+            font-weight: 700;
+            letter-spacing: clamp(2px, 1vw, 6px); 
+            text-transform: uppercase;
+            text-shadow: 0 0 10px rgba(65, 102, 245, 0.4);
+            margin-top: 5px;
+        }
+
+        /* 📸 中間圖片區塊：純漂浮 */
+        .image-showcase {
+            position: relative;
+            width: 100%;
+            max-width: 550px; 
+            aspect-ratio: 1 / 1; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 5;
+            opacity: 1; 
+            animation: floatOnly 6s ease-in-out infinite;
+            pointer-events: none; 
+            will-change: transform; 
+        }
+
+        /* 大圖背後的專屬藍色發光暈 */
+        .image-showcase::before {
+            content: '';
+            position: absolute;
+            width: 70%;
+            height: 70%;
+            background: var(--neon-blue);
+            filter: blur(80px);
+            opacity: 0.35;
+            border-radius: 50%;
+            z-index: -1;
+        }
+
+        .character-img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 30px rgba(0, 0, 0, 0.7));
+        }
+
+        /* 📝 玻璃擬態資訊卡片 */
+        .info-card {
+            background: var(--card-bg);
+            -webkit-backdrop-filter: blur(20px);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 30px;
+            padding: clamp(1.5rem, 5vw, 3rem); 
+            width: 100%;
+            max-width: 750px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.6);
+            
+            animation: slideUpFade 1s cubic-bezier(0.2, 0.8, 0.2, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+            animation-delay: 0.3s;
+            z-index: 10;
+        }
+
+        .info-card h2 {
+            font-size: clamp(1.5rem, 4vw, 1.8rem);
+            font-weight: 800;
+            color: var(--light-blue);
+            margin-bottom: clamp(1.5rem, 4vw, 2rem);
+            border-left: 4px solid var(--primary-blue);
+            padding-left: 1rem;
+            line-height: 1;
+        }
+
+        /* 🔄 自我介紹欄位 */
+        .info-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.8rem;
+        }
+
+        .info-list li {
+            display: flex;
+            align-items: center;
+            font-size: clamp(1.05rem, 2.5vw, 1.2rem);
+            padding: 1rem 1.5rem;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid transparent;
+            
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-list li:hover {
+            background: rgba(65, 102, 245, 0.08); 
+            border-color: rgba(65, 102, 245, 0.2); 
+            transform: translateX(8px) scale(1.01);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .info-list li::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 0;
+            background: linear-gradient(to bottom, var(--light-blue), var(--primary-blue));
+            transition: width 0.3s ease;
+            box-shadow: 0 0 15px var(--primary-blue);
+        }
+
+        @media (hover: hover) {
+            .info-list li:hover::before {
+                width: 4px;
+            }
+            .info-list li:hover strong {
+                color: #fff;
+                text-shadow: 0 0 5px var(--light-blue);
+            }
+        }
+
+        .info-list strong {
+            color: var(--light-blue);
+            width: 140px;
+            flex-shrink: 0;
+            font-weight: 700;
+            transition: color 0.3s ease;
+        }
+
+        /* 文字超連結特效 (用於設定設計、毛毛工作室) */
+        .text-link {
+            color: var(--text-main);
+            text-decoration: none;
+            position: relative;
+            display: inline-block;
+            font-weight: 600;
+            transition: color 0.3s ease;
+        }
+
+        .text-link::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            transform: scaleX(0);
+            height: 2px;
+            bottom: -2px;
+            left: 0;
+            background-color: var(--primary-blue);
+            transform-origin: bottom right;
+            transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+            box-shadow: 0 0 8px var(--primary-blue);
+        }
+
+        .text-link:hover {
+            color: var(--light-blue);
+        }
+
+        .text-link:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* 社群按鈕區塊 */
+        .social-links {
+            margin-top: clamp(1.5rem, 4vw, 2.5rem);
+            display: flex;
+            gap: 1.2rem;
+            justify-content: flex-start;
+            flex-wrap: wrap; 
+        }
+
+        .social-btn {
+            text-decoration: none;
+            color: var(--text-main);
+            padding: 1rem 1.8rem;
+            border-radius: 50px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            flex: 1 1 auto; 
+            min-width: 140px; 
+        }
+
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, var(--primary-blue), #2344c4);
+            opacity: 0;
+            z-index: -1;
+            transition: opacity 0.4s ease;
+        }
+
+        @media (hover: hover) {
+            .social-btn:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 15px 30px rgba(65, 102, 245, 0.4);
+                border-color: transparent;
+            }
+            .social-btn:hover::before {
+                opacity: 1;
+            }
+        }
+
+        /* RWD 調整 */
+        @media (max-width: 768px) {
+            body { padding: 2rem 1rem; }
+            .info-list li { 
+                flex-direction: column; 
+                align-items: flex-start; 
+                gap: 0.5rem; 
+                padding: 1.2rem; 
+            }
+            .info-list strong { 
+                width: 100%; 
+                border-bottom: 1px solid rgba(255,255,255,0.1); 
+                padding-bottom: 0.3rem;
+            }
+        }
+
+        @media (max-width: 380px) {
+            .social-links { flex-direction: column; }
+            .social-btn { width: 100%; }
+        }
+
+        /* 動畫 */
+        @keyframes slideDownFade {
+            0% { opacity: 0; transform: translateY(-30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideUpFade {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes shineText {
+            to { background-position: 200% center; }
+        }
+
+        @keyframes floatOnly {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header class="hero-title">
+            <h1>歡迎來到半半的小狼窩</h1>
+            <p>Welcome to Hemi’s website</p>
+        </header>
+
+        <div class="image-showcase">
+            <img src="profile.png" alt="半半 Hemi 其實種族是精靈的狼" class="character-img">
+        </div>
+
+        <div class="info-card">
+            <h2>自我介紹</h2>
+            <ul class="info-list">
+                <li>
+                    <strong>簡介</strong> 
+                    <span>其實種族是精靈的狼</span>
+                </li>
+                <li>
+                    <strong>名字</strong> 
+                    <span>半半</span>
+                </li>
+                <li>
+                    <strong>設定設計</strong> 
+                    <span><a href="https://www.facebook.com/share/1F5TzWH9gd/?mibextid=wwXIfr" target="_blank" class="text-link">月姬</a></span>
+                </li>
+                <li>
+                    <strong>毛毛工作室</strong> 
+                    <span><a href="https://www.fur-starfire.com/home" target="_blank" class="text-link">星火工作室</a></span>
+                </li>
+            </ul>
+
+            <div class="social-links">
+                <a href="https://www.facebook.com/share/1QdKvTMYA6/?mibextid=wwXIfr" target="_blank" class="social-btn">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg>
+                    Facebook
+                </a>
+                <a href="https://x.com/hemi_owo?s=21" target="_blank" class="social-btn">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M18.901 1.153h3.68l-8.04 9.19L24 22.846h-7.406l-5.8-7.584-6.638 7.584H.474l8.6-9.83L0 1.154h7.594l5.243 6.932ZM17.61 20.644h2.039L6.486 3.24H4.298Z"/></svg>
+                    X (Twitter)
+                </a>
+                <a href="https://t.me/Hemi_1025" target="_blank" class="social-btn">
+                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.64 6.8c-.15 1.58-.8 5.42-1.13 7.19-.14.75-.42 1-.68 1.03-.58.05-1.02-.38-1.58-.75-.88-.58-1.38-.94-2.23-1.5-.99-.65-.35-1.01.22-1.59.15-.15 2.71-2.48 2.76-2.69.01-.03.01-.14-.04-.2-.05-.05-.14-.03-.21-.02-.09.02-1.49.95-4.22 2.79-.4.27-.76.41-1.08.4-.36-.01-1.04-.2-1.55-.37-.62-.2-1.12-.31-1.08-.66.02-.18.27-.36.74-.55 2.92-1.27 4.86-2.11 5.83-2.51 2.78-1.16 3.35-1.36 3.73-1.36.08 0 .27.02.39.12.1.08.13.19.14.27-.01.06.01.24 0 .38z"/></svg>
+                    Telegram
+                </a>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
